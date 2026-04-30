@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'study_planner_screen.dart';
 import 'register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -18,9 +18,25 @@ class _LoginScreenState extends State<LoginScreen> {
   final String defaultPassword = 'password123';
 
   void _login() {
-    // The login logic goes here
-    print("login logic here");
-  }
+  final username = _usernameController.text.trim();
+  final password = _passwordController.text.trim();
+
+  if (username == defaultUsername && password == defaultPassword) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => StudyPlannerHomeScreen(username: username),
+      ),
+    );
+    } else {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text("Invalid username or password"),
+      ),
+    );
+    }
+    }
+}
 
   @override
   Widget build(BuildContext context) {
