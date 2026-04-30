@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'login_screen.dart';
+import 'study_planner_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -40,14 +42,40 @@ class _RegisterScreenState extends State<RegisterScreen> {
     'Research Work'
   ];
 
-  void _register() {
-    print("Study Planner Registration");
-    print("Name: ${_nameController.text}");
-    print("Username: ${_usernameController.text}");
-    print("Study Hours: ${_studyHours.round()}");
-    print("Goal: $_studyGoal");
-    print("Subjects: $selectedSubjects");
+ void _showToast(String message) {
+  Fluttertoast.showToast(
+    msg: message,
+    toastLength: Toast.LENGTH_SHORT,
+    gravity: ToastGravity.BOTTOM,
+    backgroundColor: Colors.red,
+    textColor: Colors.white,
+    fontSize: 16.0,
+  );
+}
+
+  void _register() async {
+  final name = _nameController.text.trim();
+  final username = _usernameController.text.trim();
+
+  if (username.isEmpty || name.isEmpty) {
+    _showToast('Please fill in all fields');
+    return;
   }
+
+  if (selectedSubjects.isEmpty) {
+    _showToast('Please select at least one subject');
+    return;
+  }
+
+  Navigator.pushReplacement(
+    context,
+    MaterialPageRoute(
+      builder: (context) => StudyPlannerHomeScreen(
+        username: username,
+      ),
+    ),
+  );
+}
 
   void _toggleSubject(String subject) {
     setState(() {
