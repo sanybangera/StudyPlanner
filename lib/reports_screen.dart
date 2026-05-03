@@ -1,103 +1,130 @@
 import 'package:flutter/material.dart';
 
-class PersonalInfoScreen extends StatefulWidget {
-  final String name;
-  final String username;
-  final int age;
+class ReportsScreen extends StatelessWidget {
+  const ReportsScreen({super.key});
 
-  const PersonalInfoScreen({
-    super.key,
-    required this.name,
-    required this.username,
-    required this.age,
-  });
-
-  @override
-  State<PersonalInfoScreen> createState() => _PersonalInfoScreenState();
-}
-
-class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
-  late TextEditingController nameController;
-  late TextEditingController usernameController;
-  late TextEditingController ageController;
-
-  String selectedGoal = "Exam Preparation";
-
-  @override
-  void initState() {
-    super.initState();
-    nameController = TextEditingController(text: widget.name);
-    usernameController = TextEditingController(text: widget.username);
-    ageController = TextEditingController(text: widget.age.toString());
-  }
-
-  Widget customField(
-      TextEditingController controller, String hint, IconData icon) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: TextField(
-        controller: controller,
-        decoration: InputDecoration(
-          prefixIcon: Icon(icon, color: Colors.blue),
-          hintText: hint,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-        ),
-      ),
+  Widget buildStatusIcon(bool completed) {
+    return Icon(
+      completed ? Icons.check_circle : Icons.cancel,
+      color: completed ? Colors.green : Colors.red,
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final List<Map<String, dynamic>> weeklySubjects = [
+      {
+        "subject": "Mathematics",
+        "mon": true,
+        "tue": true,
+        "wed": false,
+      },
+      {
+        "subject": "Science",
+        "mon": true,
+        "tue": false,
+        "wed": true,
+      },
+      {
+        "subject": "English",
+        "mon": false,
+        "tue": true,
+        "wed": true,
+      },
+      {
+        "subject": "Computer",
+        "mon": true,
+        "tue": true,
+        "wed": true,
+      },
+      {
+        "subject": "History",
+        "mon": false,
+        "tue": true,
+        "wed": false,
+      },
+    ];
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Personal Info"),
+        title: const Text("Weekly Reports"),
         backgroundColor: Colors.blue,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            customField(nameController, "Name", Icons.person),
-            customField(usernameController, "Username", Icons.alternate_email),
-            customField(ageController, "Age", Icons.cake),
-            const SizedBox(height: 10),
-            DropdownButtonFormField<String>(
-              value: selectedGoal,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
+        padding: const EdgeInsets.all(12),
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Table(
+            border: TableBorder.all(
+              color: Colors.grey,
+            ),
+            defaultColumnWidth:
+                const FixedColumnWidth(80),
+            children: [
+              const TableRow(
+                decoration: BoxDecoration(
+                  color: Color(0xFFE3F2FD),
+                ),
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(8),
+                    child: Text(
+                      "Subject",
+                      style: TextStyle(
+                        fontWeight:
+                            FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(8),
+                    child: Text("Mon"),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(8),
+                    child: Text("Tue"),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(8),
+                    child: Text("Wed"),
+                  ),
+                ],
+              ),
+
+              ...weeklySubjects.map(
+                (subject) => TableRow(
+                  children: [
+                    Padding(
+                      padding:
+                          const EdgeInsets.all(
+                              8),
+                      child: Text(
+                        subject["subject"],
+                      ),
+                    ),
+                    Center(
+                      child:
+                          buildStatusIcon(
+                        subject["mon"],
+                      ),
+                    ),
+                    Center(
+                      child:
+                          buildStatusIcon(
+                        subject["tue"],
+                      ),
+                    ),
+                    Center(
+                      child:
+                          buildStatusIcon(
+                        subject["wed"],
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              items: ["Exam Preparation", "Skill Building", "Daily Study"]
-                  .map((goal) => DropdownMenuItem(
-                        value: goal,
-                        child: Text(goal),
-                      ))
-                  .toList(),
-              onChanged: (value) {
-                setState(() {
-                  selectedGoal = value!;
-                });
-              },
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
-                minimumSize: const Size(double.infinity, 45),
-              ),
-              onPressed: () {
-                Navigator.pop(context, {
-                  "name": nameController.text,
-                  "username": usernameController.text,
-                  "age": int.tryParse(ageController.text) ?? 18,
-                });
-              },
-              child: const Text("Save Changes"),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
