@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'subject_detail_screen.dart';
-
+import 'subjects_screen.dart';
 class StudyPlannerHomeScreen extends StatefulWidget {
   final String username;
 
@@ -193,13 +193,10 @@ class _StudyPlannerHomeScreenState
               leading: const Icon(Icons.book),
               title: const Text("Subjects"),
               onTap: () {
-                Navigator.pop(context);
-
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>
-                        const SubjectDetailScreen(),
+                    builder: (_) => const SubjectsScreen(),
                   ),
                 );
               },
